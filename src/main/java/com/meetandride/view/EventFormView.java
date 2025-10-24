@@ -2,6 +2,7 @@ package com.meetandride.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.meetandride.layout.MainLayout;
 import com.meetandride.model.Event;
 import com.meetandride.service.EventService;
 import com.meetandride.service.UserService;
@@ -14,37 +15,56 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("eventi/nuovo")
+@Route(value = "eventi/nuovo", layout = MainLayout.class)
+@PageTitle("Crea nuovo evento | Meet&Ride")
 public class EventFormView extends VerticalLayout {
 
     private final EventService eventService;
     private final UserService userService;
+
     @Autowired
     public EventFormView(EventService eventService, UserService userService) {
         this.eventService = eventService;
         this.userService = userService;
 
-        H1 title = new H1("Aggiungi evento");
+        // Titolo pagina
+        H1 title = new H1("🛠️ Crea un nuovo evento");
 
+        // Campi del form
         TextField titolo = new TextField("Titolo");
+        titolo.setRequired(true);
+
         TextArea descrizione = new TextArea("Descrizione");
-        TextField localita = new TextField("Localita");
-        TextField orario = new TextField("Orario");
+        descrizione.setPlaceholder("Descrivi brevemente il tuo evento...");
+
+        TextField localita = new TextField("Località");
+        localita.setRequired(true);
+
         DatePicker data = new DatePicker("Data");
+        data.setRequired(true);
+
+        TextField orario = new TextField("Orario (es. 10:00)");
+        orario.setPlaceholder("Inserisci un orario");
 
         Select<String> visibilita = new Select<>();
-        visibilita.setLabel("Visibilita");
+        visibilita.setLabel("Visibilità");
         visibilita.setItems("Aperto", "Chiuso", "Privato");
         visibilita.setValue("Aperto");
 
-        Button salvaButton = new Button("💾 Salva");
+        // Pulsanti
+        Button salvaButton = new Button("💾 Salva evento");
         Button annullaButton = new Button("↩️ Annulla");
 
-        // Azione bottone Salva
+        // 🔹 Azione Salva
         salvaButton.addClickListener(e -> {
-            // salvo dati nel db
+            if (titolo.isEmpty() || localita.isEmpty() || data.isEmpty()) {
+                Notification.show("Compila tutti i campi obbligatori!");
+                return;
+            }
+
             Event evento = new Event();
             evento.setTitolo(titolo.getValue());
             evento.setDescrizione(descrizione.getValue());
@@ -52,27 +72,27 @@ public class EventFormView extends VerticalLayout {
             evento.setLocalita(localita.getValue());
             evento.setData(data.getValue());
             evento.setOrario(orario.getValue());
-            //evento.setHost("Loren"); //
             evento.setUser(userService.getAuthenticatedUser());
 
             eventService.save(evento);
-            Notification.show("Evento \"" + titolo.getValue() + "\" creato con successo!");
+            Notification.show("✅ Evento \"" + titolo.getValue() + "\" creato con successo!");
             getUI().ifPresent(ui -> ui.navigate("eventi"));
         });
 
-        // Azione bottone Annulla
-        annullaButton.addClickListener(e
-                -> getUI().ifPresent(ui -> ui.navigate("eventi"))
+        // 🔹 Azione Annulla
+        annullaButton.addClickListener(e ->
+            getUI().ifPresent(ui -> ui.navigate("eventi"))
         );
 
-        // Layout orizzontale per i pulsanti
+        // Layout pulsanti
         HorizontalLayout pulsanti = new HorizontalLayout(salvaButton, annullaButton);
+        pulsanti.setSpacing(true);
 
-        // Aggiunta di tutti i componenti alla view
+        // Layout principale
         add(title, titolo, descrizione, localita, data, orario, visibilita, pulsanti);
-
-        // Stile
         setAlignItems(Alignment.CENTER);
+        setSpacing(true);
+        setPadding(true);
         setWidth("600px");
     }
 }

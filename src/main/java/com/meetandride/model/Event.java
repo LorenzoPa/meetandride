@@ -1,6 +1,7 @@
 package com.meetandride.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -28,17 +31,25 @@ public class Event {
     private String localita;
     private LocalDate data;
     private String orario;
-    
-    @ManyToOne
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Event(){
+    @ManyToMany
+    @JoinTable(
+            name = "partecipazioni",
+            joinColumns = @JoinColumn(name = "evento_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> partecipanti;
+
+    public Event() {
 
     }
 
     public Event(String titolo, String descrizione, String visibilita,
-                 String localita, LocalDate data, String orario, User user) {
+            String localita, LocalDate data, String orario, User user) {
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.visibilita = visibilita;
@@ -47,28 +58,76 @@ public class Event {
         this.orario = orario;
         this.user = user;
     }
-    
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public String getTitolo() { return titolo; }
-    public void setTitolo(String titolo) { this.titolo = titolo; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getDescrizione() { return descrizione; }
-    public void setDescrizione(String descrizione) { this.descrizione = descrizione; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getVisibilita() { return visibilita; }
-    public void setVisibilita(String visibilita) { this.visibilita = visibilita; }
+    public String getTitolo() {
+        return titolo;
+    }
 
-    public String getLocalita() { return localita; }
-    public void setLocalita(String localita) { this.localita = localita; }
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
+    }
 
-    public LocalDate getData() { return data; }
-    public void setData(LocalDate data) { this.data = data; }
+    public String getDescrizione() {
+        return descrizione;
+    }
 
-    public String getOrario() { return orario; }
-    public void setOrario(String orario) { this.orario = orario; }
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public String getVisibilita() {
+        return visibilita;
+    }
+
+    public void setVisibilita(String visibilita) {
+        this.visibilita = visibilita;
+    }
+
+    public String getLocalita() {
+        return localita;
+    }
+
+    public void setLocalita(String localita) {
+        this.localita = localita;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public String getOrario() {
+        return orario;
+    }
+
+    public void setOrario(String orario) {
+        this.orario = orario;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<User> getPartecipanti() {
+        return partecipanti;
+    }
+
+    public void setPartecipanti(List<User> partecipanti) {
+        this.partecipanti = partecipanti;
+    }
 }

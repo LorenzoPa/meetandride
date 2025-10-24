@@ -1,1 +1,48 @@
-/* Add your styles here */
+:root {
+    --primary-color: #ff4444;
+    --secondary-color: #fff;
+    --background-color: #f8f9fa;
+    --text-color: #222;
+    --radius: 10px;
+}
+
+body, vaadin-app-layout {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid #e63939;
+}
+
+.navbar a, .navbar button {
+    color: white;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.navbar a:hover, .navbar button:hover {
+    text-decoration: underline;
+}
+
+vaadin-button {
+    border-radius: var(--radius);
+    background-color: var(--primary-color);
+    color: white;
+}
+
+vaadin-button:hover {
+    filter: brightness(1.1);
+}
+
+h1 {
+    color: var(--primary-color);
+    font-weight: 700;
+}

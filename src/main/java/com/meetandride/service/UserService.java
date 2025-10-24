@@ -1,12 +1,15 @@
 package com.meetandride.service;
 
-import com.meetandride.model.User;
-import com.meetandride.repository.UserRepository;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.meetandride.model.User;
+import com.meetandride.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -37,9 +40,15 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    // 🔹 Recupera l'utente attualmente loggato (più avanti useremo SecurityContext)
+    // 🔹 Recupera l'utente attualmente loggato
     public User getAuthenticatedUser() {
-        // per ora ritorna null, sarà implementato dopo con SecurityContext
-        return null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName() == null || auth.getName().equals("anonymousUser")) {
+            return null;
+        }
+        return userRepository.findByUsername(auth.getName()).orElse(null);
     }
+    public boolean existsByUsername(String username) {
+    return userRepository.findByUsername(username).isPresent();
+}
 }
