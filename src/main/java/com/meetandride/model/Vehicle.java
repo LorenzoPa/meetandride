@@ -50,7 +50,7 @@ public class Vehicle {
         this.owner = owner;
     }
 
-    // 🔹 Getter e Setter
+    //Getter e Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -19,14 +19,14 @@ public class VehicleService {
     }
 
     /**
-     * 🔹 Crea o aggiorna il veicolo associato a un utente.
-     * Se l’utente possiede già un veicolo, viene aggiornato lo stesso record.
+     * Crea o aggiorna il veicolo associato a un utente.
+     * Se l’utente possiede già un veicolo, viene aggiornato la syessa auto
      */
     @Transactional
     public Vehicle saveOrUpdateFor(User owner, Vehicle newVehicle) {
         Optional<Vehicle> existing = vehicleRepository.findByOwner(owner);
 
-        // Controllo targa duplicata (solo se appartiene a un altro utente)
+        // Controllo targa duplicata 
         boolean targaEsistente = vehicleRepository.findByTargaIgnoreCase(newVehicle.getTarga())
                 .filter(v -> !v.getOwner().getId().equals(owner.getId()))
                 .isPresent();
@@ -35,7 +35,7 @@ public class VehicleService {
             throw new IllegalArgumentException("La targa è già registrata da un altro utente.");
         }
 
-        // Se l’utente ha già un veicolo → aggiorna stesso ID (evita duplicati)
+        // Se l’utente ha già un veicolo aggiorna stesso ID 
         existing.ifPresent(oldVehicle -> newVehicle.setId(oldVehicle.getId()));
 
         newVehicle.setOwner(owner);
@@ -43,7 +43,7 @@ public class VehicleService {
     }
 
     /**
-     * 🔹 Recupera il veicolo associato a un utente.
+     *Recupera il veicolo associato a un utente.
      */
     @Transactional(readOnly = true)
     public Optional<Vehicle> findByOwner(User owner) {
@@ -51,7 +51,7 @@ public class VehicleService {
     }
 
     /**
-     * 🔹 Elimina il veicolo associato a un utente.
+     *Elimina il veicolo associato a un utente.
      */
     @Transactional
     public void deleteFor(User owner) {

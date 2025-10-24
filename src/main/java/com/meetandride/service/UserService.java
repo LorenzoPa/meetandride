@@ -23,7 +23,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // 🔹 Registra un nuovo utente
+    //Registra un nuovo utente
     public User registerUser(String username, String email, String rawPassword) {
         if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("Username già in uso.");
@@ -37,22 +37,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // 🔹 Trova utente per username
+    //Trova utente per username
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    // 🔹 Controlla se esiste già un utente con quell'email
+    //Controlla se esiste già un utente con quell'email
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    // 🔹 Controlla se esiste già un utente con quello username
+    //Controlla se esiste già un utente con l'user scelto
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
-    // 🔹 Recupera l'utente attualmente loggato
+    //Recupera l'utente attualmente loggato
     public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getName())) {

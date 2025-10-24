@@ -11,12 +11,12 @@ import com.meetandride.model.Vehicle;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    // 🔹 Recupera veicolo associato a un utente specifico
+    //ricerca veicolo associato a un utente
     Optional<Vehicle> findByOwner(User owner);
 
-    // 🔹 Recupera veicolo tramite targa (case-insensitive)
+    // ricerca veicolo tramite targa
     Optional<Vehicle> findByTargaIgnoreCase(String targa);
 
-    // 🔹 Verifica esistenza targa (utile per registrazione)
+    //Verifica esistenza targa
     boolean existsByTargaIgnoreCase(String targa);
 }

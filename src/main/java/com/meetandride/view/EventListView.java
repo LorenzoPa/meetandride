@@ -39,13 +39,13 @@ public class EventListView extends VerticalLayout {
         H1 title = new H1("🏎️ Raduni Automobilistici");
         title.getStyle().set("margin-bottom", "0");
 
-        // 🔍 Barra di ricerca
+        // Barra di ricerca
         TextField searchField = new TextField();
         searchField.setPlaceholder("Cerca per titolo, località, data o host...");
         searchField.setWidth("350px");
 
-        Button searchButton = new Button("🔍 Cerca");
-        Button resetButton = new Button("❌ Reset");
+        Button searchButton = new Button("Cerca");
+        Button resetButton = new Button(" Reset");
 
         // Griglia eventi
         Grid<Event> grid = new Grid<>(Event.class, false);
@@ -55,7 +55,7 @@ public class EventListView extends VerticalLayout {
         grid.addColumn(Event::getOrario).setHeader("Orario").setAutoWidth(true);
         grid.addColumn(event -> event.getUser() != null ? event.getUser().getUsername() : "—").setHeader("Host").setAutoWidth(true);
 
-        // 🔹 Colonna Visibilità
+        // Colonna Visibilità
         grid.addComponentColumn(event -> {
             Span badge = new Span(event.getVisibilita().name());
             badge.getStyle().set("padding", "4px 8px")
@@ -71,7 +71,7 @@ public class EventListView extends VerticalLayout {
             return badge;
         }).setHeader("Visibilità").setAutoWidth(true);
 
-        // 🔹 Colonna Azione
+        // Colonna Azione
         grid.addComponentColumn(event -> {
             User current = userService.getAuthenticatedUser();
             Button button = new Button();
@@ -86,10 +86,10 @@ public class EventListView extends VerticalLayout {
                 button.setText("Accedi per partecipare");
                 button.setEnabled(false);
             } else if (isHost(event, current)) {
-                button.setText("🎯 Sei l'host");
+                button.setText(" Sei l'host");
                 button.setEnabled(false);
             } else if (isParticipating(event, current)) {
-                button.setText("❌ Lascia evento");
+                button.setText("Lascia evento");
                 button.getStyle().set("background-color", "#dc3545").set("color", "white");
                 button.addClickListener(e -> {
                     eventService.removeParticipant(event.getId(), current);
@@ -97,7 +97,7 @@ public class EventListView extends VerticalLayout {
                     refreshGrid(grid);
                 });
             } else {
-                button.setText("✅ Partecipa");
+                button.setText("Partecipa");
                 button.getStyle().set("background-color", "#28a745").set("color", "white");
                 button.addClickListener(e -> {
                     eventService.addParticipant(event.getId(), current);
@@ -108,7 +108,7 @@ public class EventListView extends VerticalLayout {
             return button;
         }).setHeader("Azione").setAutoWidth(true);
 
-        // 🔹 Righe cliccabili
+        // Righe cliccabili
         grid.addItemClickListener(e -> {
             Event selected = e.getItem();
             if (selected != null && selected.getId() != null) {
@@ -125,7 +125,7 @@ public class EventListView extends VerticalLayout {
         eventi = filtraEventiVisibili(eventService.findAll());
         grid.setItems(eventi);
 
-        // 🔍 Ricerca
+        // Ricerca
         searchButton.addClickListener(e -> {
             String query = searchField.getValue().trim().toLowerCase();
             List<Event> filtered = eventi.stream()
@@ -148,10 +148,10 @@ public class EventListView extends VerticalLayout {
         });
 
         // 🔹 Pulsanti azione
-        Button creaEvento = new Button("➕ Crea nuovo evento", e -> getUI().ifPresent(ui -> ui.navigate("eventi/nuovo")));
+        Button creaEvento = new Button("Crea nuovo evento", e -> getUI().ifPresent(ui -> ui.navigate("eventi/nuovo")));
         creaEvento.getStyle().set("background-color", "#007bff").set("color", "white");
 
-        Button aggiorna = new Button("🔄 Aggiorna", e -> refreshGrid(grid));
+        Button aggiorna = new Button("Aggiorna", e -> refreshGrid(grid));
         aggiorna.getStyle().set("background-color", "#6c757d").set("color", "white");
 
         HorizontalLayout ricerca = new HorizontalLayout(searchField, searchButton, resetButton);
@@ -166,7 +166,7 @@ public class EventListView extends VerticalLayout {
         setSpacing(true);
     }
 
-    // 👤 Utility methods
+    //Utility methods
     private boolean isHost(Event event, User user) {
         return event.getUser() != null && event.getUser().getId().equals(user.getId());
     }
@@ -181,7 +181,7 @@ public class EventListView extends VerticalLayout {
         grid.setItems(eventi);
     }
 
-    // 🔒 Mostra solo eventi visibili all'utente
+    //Mostra solo eventi visibili all'utente
     private List<Event> filtraEventiVisibili(List<Event> eventi) {
         User current = userService.getAuthenticatedUser();
         return eventi.stream()

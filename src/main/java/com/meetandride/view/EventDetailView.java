@@ -59,40 +59,40 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
 
         User current = userService.getAuthenticatedUser();
 
-        // 🔹 Info evento
+        //Info evento
         H1 titolo = new H1(evento.getTitolo());
         Paragraph descrizione = new Paragraph(evento.getDescrizione() != null ? evento.getDescrizione() : "(nessuna descrizione)");
-        Paragraph localita = new Paragraph("📍 Località: " + evento.getLocalita());
-        Paragraph data = new Paragraph("📅 Data: " + evento.getData());
-        Paragraph orario = new Paragraph("⏰ Orario: " + evento.getOrario());
-        Paragraph visibilita = new Paragraph("🔒 Visibilità: " + evento.getVisibilita());
-        Paragraph host = new Paragraph("👤 Creatore: " + (evento.getUser() != null ? evento.getUser().getUsername() : "—"));
-        countParagraph = new Paragraph("👥 Partecipanti: " + getPartecipantiCount());
+        Paragraph localita = new Paragraph(" Località: " + evento.getLocalita());
+        Paragraph data = new Paragraph(" Data: " + evento.getData());
+        Paragraph orario = new Paragraph(" Orario: " + evento.getOrario());
+        Paragraph visibilita = new Paragraph(" Visibilità: " + evento.getVisibilita());
+        Paragraph host = new Paragraph(" Creatore: " + (evento.getUser() != null ? evento.getUser().getUsername() : "—"));
+        countParagraph = new Paragraph(" Partecipanti: " + getPartecipantiCount());
 
-        // 🔹 Bottone dinamico
+        //Bottone dinamico
         actionButton = new Button();
         refreshButtonState(current);
         actionButton.addClickListener(e -> handleActionButton(current));
 
         Button indietro = new Button("← Torna alla lista", ev -> getUI().ifPresent(ui -> ui.navigate("eventi")));
 
-        // 🔹 Se l’utente è host → pulsanti gestionali
+        //Se l’utente è host → pulsanti gestionali
         HorizontalLayout hostActions = new HorizontalLayout();
         if (current != null && isHost(current)) {
-            Button modifica = new Button("✏️ Modifica evento", e -> getUI().ifPresent(ui -> ui.navigate("eventi/modifica/" + evento.getId())));
-            Button elimina = new Button("🗑️ Elimina evento", e -> showDeleteConfirmation());
+            Button modifica = new Button("Modifica evento", e -> getUI().ifPresent(ui -> ui.navigate("eventi/modifica/" + evento.getId())));
+            Button elimina = new Button("Elimina evento", e -> showDeleteConfirmation());
             hostActions.add(modifica, elimina);
             hostActions.setSpacing(true);
         }
 
-        // 🔹 Campo invito (solo per host)
+        //Campo invito (solo per host)
         VerticalLayout inviteLayout = new VerticalLayout();
         if (current != null && isHost(current)) {
             H2 titoloInvito = new H2("Invita un utente");
             TextField usernameField = new TextField("Username dell’utente");
             usernameField.setPlaceholder("Inserisci lo username...");
 
-            Button invitaBtn = new Button("📨 Invita utente", e -> {
+            Button invitaBtn = new Button("Invita utente", e -> {
                 String username = usernameField.getValue().trim();
                 if (username.isEmpty()) {
                     Notification.show("Inserisci uno username valido.", 2500, Position.TOP_CENTER);
@@ -118,7 +118,7 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
                 }
 
                 eventService.addParticipant(evento.getId(), invited);
-                Notification.show("✅ Utente \"" + username + "\" invitato con successo!", 2500, Position.TOP_CENTER);
+                Notification.show("Utente \"" + username + "\" invitato con successo!", 2500, Position.TOP_CENTER);
                 usernameField.clear();
                 reloadData();
             });
@@ -152,7 +152,7 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
     }
 
     // ===========================================================
-    // 🔸 Dialogo conferma eliminazione
+    //Dialogo conferma eliminazione
     // ===========================================================
     private void showDeleteConfirmation() {
         Dialog dialog = new Dialog();
@@ -160,20 +160,20 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
 
         Paragraph text = new Paragraph("Sei sicuro di voler eliminare questo evento? L’azione è irreversibile.");
 
-        Button conferma = new Button("🗑️ Elimina", e -> {
+        Button conferma = new Button("Elimina", e -> {
             eventService.delete(evento);
             dialog.close();
             Notification.show("Evento eliminato con successo.", 3000, Position.TOP_CENTER);
             getUI().ifPresent(ui -> ui.navigate("eventi"));
         });
 
-        Button annulla = new Button("❌ Annulla", e -> dialog.close());
+        Button annulla = new Button("Annulla", e -> dialog.close());
         dialog.add(text, new HorizontalLayout(conferma, annulla));
         dialog.open();
     }
 
     // ===========================================================
-    // 🔸 HOST PANEL - Gestione richieste in sospeso
+    //HOST PANEL - Gestione richieste in sospeso
     // ===========================================================
     private void addHostRequestsSection() {
         if (evento.getRichieste() == null || evento.getRichieste().isEmpty()) {
@@ -186,13 +186,13 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
         gridRichieste.addColumn(User::getUsername).setHeader("Username").setAutoWidth(true);
 
         gridRichieste.addComponentColumn(user -> {
-            Button accetta = new Button("✅ Approva", e -> {
+            Button accetta = new Button("Approva", e -> {
                 eventService.approveRequest(evento.getId(), user);
                 Notification.show(user.getUsername() + " è stato approvato.", 2500, Position.TOP_CENTER);
                 reloadData();
             });
 
-            Button rifiuta = new Button("❌ Rifiuta", e -> {
+            Button rifiuta = new Button("Rifiuta", e -> {
                 eventService.rejectRequest(evento.getId(), user);
                 Notification.show(user.getUsername() + " è stato rifiutato.", 2500, Position.TOP_CENTER);
                 reloadData();
@@ -206,7 +206,7 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
     }
 
     // ===========================================================
-    // 🔸 Azioni utente
+    //Azioni utente
     // ===========================================================
     private void handleActionButton(User current) {
         if (current == null) {
@@ -250,7 +250,7 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
     }
 
     // ===========================================================
-    // 🔸 Refresh helpers
+    //Refresh helpers
     // ===========================================================
     private void reloadData() {
         evento = eventService.findById(evento.getId());
@@ -280,7 +280,7 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
         }
 
         if (isHost(current)) {
-            actionButton.setText("🎯 Sei l'host");
+            actionButton.setText("Sei l'host");
             actionButton.setEnabled(false);
             return;
         }
@@ -288,20 +288,20 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
         switch (evento.getVisibilita()) {
             case CHIUSO -> {
                 if (evento.isParticipating(current)) {
-                    actionButton.setText("❌ Lascia evento");
+                    actionButton.setText("Lascia evento");
                 } else if (evento.hasRequested(current)) {
-                    actionButton.setText("⌛ Richiesta in attesa");
+                    actionButton.setText("Richiesta in attesa");
                     actionButton.setEnabled(false);
                     return;
                 } else {
-                    actionButton.setText("🔔 Richiedi partecipazione");
+                    actionButton.setText("Richiedi partecipazione");
                 }
             }
             default -> {
                 if (evento.isParticipating(current)) {
-                    actionButton.setText("❌ Non partecipo");
+                    actionButton.setText("Non partecipo");
                 } else {
-                    actionButton.setText("✅ Partecipa");
+                    actionButton.setText("Partecipa");
                 }
             }
         }
@@ -309,7 +309,7 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
     }
 
     // ===========================================================
-    // 🔸 Utility methods
+    //Utility methods
     // ===========================================================
     private int getPartecipantiCount() {
         return evento.getPartecipanti() != null ? evento.getPartecipanti().size() : 0;

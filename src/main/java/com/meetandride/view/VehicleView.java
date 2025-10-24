@@ -43,7 +43,7 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         User user = userService.getAuthenticatedUser();
         if (user == null) {
-            Notification.show("⚠️ Devi effettuare il login per accedere a questa pagina.", 3000, Position.TOP_CENTER);
+            Notification.show("Devi effettuare il login per accedere a questa pagina.", 3000, Position.TOP_CENTER);
             event.forwardTo("login");
             return;
         }
@@ -63,7 +63,7 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
                 .set("border-radius", "12px")
                 .set("box-shadow", "0 4px 12px rgba(0,0,0,0.1)");
 
-        H1 title = new H1("🚗 Il mio veicolo");
+        H1 title = new H1("Il mio veicolo");
         title.getStyle()
                 .set("font-weight", "700")
                 .set("color", "#2c3e50");
@@ -72,7 +72,7 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
 
         // 🔹 Se l’utente non ha ancora un veicolo
         if (existingVehicleOpt.isEmpty()) {
-            Paragraph info = new Paragraph("Non hai ancora registrato un veicolo. Inserisci i dati qui sotto 👇");
+            Paragraph info = new Paragraph("Non hai ancora registrato un veicolo. Inserisci i dati qui sotto ");
             info.getStyle().set("color", "#555");
             layout.add(title, info);
         } else {
@@ -106,13 +106,13 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
         });
 
         // 🔹 Pulsanti
-        Button salvaBtn = new Button(existingVehicleOpt.isPresent() ? "💾 Aggiorna veicolo" : "➕ Aggiungi veicolo");
+        Button salvaBtn = new Button(existingVehicleOpt.isPresent() ? "Aggiorna veicolo" : "Aggiungi veicolo");
         salvaBtn.getStyle()
                 .set("background-color", "#28a745")
                 .set("color", "white")
                 .set("border-radius", "8px");
 
-        Button eliminaBtn = new Button("🗑️ Elimina veicolo");
+        Button eliminaBtn = new Button("Elimina veicolo");
         eliminaBtn.getStyle()
                 .set("background-color", "#dc3545")
                 .set("color", "white")
@@ -136,16 +136,16 @@ public class VehicleView extends VerticalLayout implements BeforeEnterObserver {
                 );
 
                 vehicleService.saveOrUpdateFor(user, nuovo);
-                Notification.show("✅ Veicolo salvato con successo!", 3000, Position.TOP_CENTER);
+                Notification.show("Veicolo salvato con successo!", 3000, Position.TOP_CENTER);
                 getUI().ifPresent(ui -> ui.getPage().reload());
             } catch (IllegalArgumentException ex) {
-                Notification.show("❌ " + ex.getMessage(), 3000, Position.TOP_CENTER);
+                Notification.show("" + ex.getMessage(), 3000, Position.TOP_CENTER);
             }
         });
 
         eliminaBtn.addClickListener(e -> {
             vehicleService.deleteFor(user);
-            Notification.show("🚮 Veicolo rimosso con successo!", 3000, Position.TOP_CENTER);
+            Notification.show("Veicolo rimosso con successo!", 3000, Position.TOP_CENTER);
             getUI().ifPresent(ui -> ui.getPage().reload());
         });
 

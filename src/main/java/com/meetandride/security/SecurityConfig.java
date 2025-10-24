@@ -13,11 +13,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 🔒 Disattiva CSRF solo se non hai form HTML diretti (Vaadin lo gestisce da sé)
+            //Disattiva CSRF solo se non hai form HTML diretti (Vaadin lo gestisce da sé)
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-                // 🔓 Rotte pubbliche (registrazione, login, risorse statiche)
+                //Rotte pubbliche (registrazione, login)
                 .requestMatchers(
                     "/", "/login", "/register",
                     "/images/**", "/styles/**", "/VAADIN/**",
@@ -25,22 +25,22 @@ public class SecurityConfig {
                     "/manifest.webmanifest", "/sw.js", "/offline.html"
                 ).permitAll()
 
-                // 🔒 Area admin
+                //admin
                 .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                // 🔒 Tutto il resto richiede autenticazione
+                //Tutto il resto richiede autenticazione
                 .anyRequest().authenticated()
             )
 
-            // 🔐 Configurazione form login
+            //Configurazione form login
             .formLogin(login -> login
-                .loginPage("/login")                  // pagina custom Vaadin
-                .defaultSuccessUrl("/", true)         // redirect dopo login
-                .failureUrl("/login?error")           // redirect se login fallisce
+                .loginPage("/login")                  //pagina custom Vaadin
+                .defaultSuccessUrl("/", true)         //redirect dopo login
+                .failureUrl("/login?error")           //redirect se login fallisce
                 .permitAll()
             )
 
-            // 🔓 Configurazione logout
+            //logout
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
@@ -52,7 +52,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // BCrypt rimane la scelta migliore per password hashing
         return new BCryptPasswordEncoder();
     }
 }

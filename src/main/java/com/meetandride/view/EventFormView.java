@@ -38,10 +38,10 @@ public class EventFormView extends VerticalLayout {
         setSpacing(true);
         setPadding(true);
 
-        // 🔹 Titolo pagina
+        //Titolo pagina
         H1 title = new H1("🛠️ Crea un nuovo evento");
 
-        // 🔹 Campi del form
+        //Campi del form
         TextField titolo = new TextField("Titolo");
         titolo.setRequiredIndicatorVisible(true);
         titolo.setPlaceholder("Es. Raduno a Livorno");
@@ -60,7 +60,7 @@ public class EventFormView extends VerticalLayout {
         TextField orario = new TextField("Orario");
         orario.setPlaceholder("Es. 10:00");
 
-        // 🔹 Selettore visibilità
+        //Selettore visibilità
         Select<Visibilita> visibilita = new Select<>();
         visibilita.setLabel("Visibilità");
         visibilita.setItems(Visibilita.values());
@@ -71,15 +71,15 @@ public class EventFormView extends VerticalLayout {
         });
         visibilita.setValue(Visibilita.APERTO);
 
-        // 🔹 Pulsanti
-        Button salvaButton = new Button("💾 Salva evento");
+        //Pulsanti
+        Button salvaButton = new Button("Salva evento");
         salvaButton.getStyle().set("background-color", "#4CAF50").set("color", "white");
 
-        Button annullaButton = new Button("↩️ Annulla", e -> 
+        Button annullaButton = new Button("Annulla", e -> 
             getUI().ifPresent(ui -> ui.navigate("eventi"))
         );
 
-        // 🔹 Azione Salva
+        //Salva
         salvaButton.addClickListener(e -> {
             User current = userService.getAuthenticatedUser();
             if (current == null) {
@@ -103,7 +103,7 @@ public class EventFormView extends VerticalLayout {
             );
 
             eventService.save(evento);
-            Notification.show("✅ Evento \"" + titolo.getValue() + "\" creato con successo!", 3000, Position.TOP_CENTER);
+            Notification.show("Evento \"" + titolo.getValue() + "\" creato con successo!", 3000, Position.TOP_CENTER);
             getUI().ifPresent(ui -> ui.navigate("eventi"));
         });
 

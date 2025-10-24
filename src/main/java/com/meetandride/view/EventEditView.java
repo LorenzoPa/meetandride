@@ -67,7 +67,7 @@ public class EventEditView extends VerticalLayout implements HasUrlParameter<Lon
             return;
         }
 
-        H1 title = new H1("✏️ Modifica evento");
+        H1 title = new H1("Modifica evento");
 
         // Campi form
         titolo = new TextField("Titolo");
@@ -97,10 +97,10 @@ public class EventEditView extends VerticalLayout implements HasUrlParameter<Lon
         visibilita.setValue(evento.getVisibilita());
 
         // Pulsanti
-        Button salvaButton = new Button("💾 Salva modifiche", e -> salvaModifiche());
+        Button salvaButton = new Button("salva modifiche", e -> salvaModifiche());
         salvaButton.getStyle().set("background-color", "#4CAF50").set("color", "white");
 
-        Button annullaButton = new Button("↩️ Annulla", e -> 
+        Button annullaButton = new Button("↩Annulla", e -> 
             getUI().ifPresent(ui -> ui.navigate("eventi/dettaglio/" + evento.getId()))
         );
 
@@ -125,7 +125,7 @@ public class EventEditView extends VerticalLayout implements HasUrlParameter<Lon
 
         eventService.save(evento);
 
-        Notification.show("✅ Modifiche salvate con successo!", 3000, Position.TOP_CENTER);
+        Notification.show("Modifiche salvate con successo!", 3000, Position.TOP_CENTER);
         getUI().ifPresent(ui -> ui.navigate("eventi/dettaglio/" + evento.getId()));
     }
 

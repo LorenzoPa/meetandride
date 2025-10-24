@@ -12,21 +12,21 @@ import com.meetandride.model.User;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    // 🔹 Trova eventi creati da un certo utente (host)
+    //Trova eventi creati da un user
     List<Event> findByUserUsername(String username);
 
-    // 🔹 Ricerca eventi per titolo (case-insensitive, utile per barra di ricerca)
+    //Ricerca eventi per titolo
     List<Event> findByTitoloContainingIgnoreCase(String titolo);
 
-    // 🔹 Ricerca per località
+    //Ricerca per località
     List<Event> findByLocalitaContainingIgnoreCase(String localita);
 
-    // 🔹 Ricerca per data
+    //Ricerca per data
     List<Event> findByData(LocalDate data);
 
-    // 🔹 Ricerca combinata: utile per filtri multipli
+    //Ricerca combinata: utile per filtri multipli
     List<Event> findByTitoloContainingIgnoreCaseAndLocalitaContainingIgnoreCase(String titolo, String localita);
 
-    // 🔹 Tutti gli eventi creati da un certo user (entità diretta)
+    //Tutti gli eventi creati da un certo user
     List<Event> findByUser(User user);
 }

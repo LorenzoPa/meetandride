@@ -22,12 +22,12 @@ public class EventService {
         this.userService = userService;
     }
 
-    // 🔹 Recupera tutti gli eventi
+    //Recupera tutti gli eventi
     @Transactional(readOnly = true)
     public List<Event> findAll() {
         List<Event> events = eventRepository.findAll();
 
-        // 🔸 Forza il caricamento delle relazioni per evitare LazyInitializationException
+        //Forza il caricamento delle relazioni per evitare LazyInitializationException che dava problemi
         events.forEach(e -> {
             if (e.getUser() != null) {
                 e.getUser().getUsername(); // forza il caricamento del proxy User
@@ -43,7 +43,7 @@ public class EventService {
         return events;
     }
 
-    // 🔹 Salva un evento e assegna l’utente loggato come host
+    //Salva un evento e assegna l’utente loggato come host
     public void save(Event event) {
         User loggedUser = userService.getAuthenticatedUser();
         if (loggedUser == null) {
@@ -53,12 +53,12 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    // 🔹 Elimina un evento
+    //Elimina un evento
     public void delete(Event event) {
         eventRepository.delete(event);
     }
 
-    // 🔹 Cerca evento per ID
+    //Cerca evento per ID
     @Transactional(readOnly = true)
     public Event findById(Long id) {
         Event event = eventRepository.findById(id).orElse(null);
@@ -70,13 +70,13 @@ public class EventService {
         return event;
     }
 
-    // 🔹 Trova eventi creati da un utente
+    //Trova eventi creati da un utente
     @Transactional(readOnly = true)
     public List<Event> findByUser(User user) {
         return eventRepository.findByUser(user);
     }
 
-    // 🔹 Aggiungi partecipante o richiesta in base alla visibilità
+    //Aggiungi partecipante o richiesta in base alla visibilità
     @Transactional
     public void addParticipant(Long eventId, User user) {
         Event event = getEventOrThrow(eventId);
@@ -96,7 +96,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    // 🔹 Rimuovi partecipante
+    //Rimuovi partecipante
     @Transactional
     public void removeParticipant(Long eventId, User user) {
         Event event = getEventOrThrow(eventId);
@@ -104,7 +104,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    // 🔹 Aggiungi richiesta manualmente (per eventi CHIUSI)
+    //Aggiungi richiesta manualmente (per eventi CHIUSI)
     @Transactional
     public void addRequest(Long eventId, User user) {
         Event event = getEventOrThrow(eventId);
@@ -114,7 +114,7 @@ public class EventService {
         }
     }
 
-    // 🔹 Approva richiesta (l’host accetta)
+    //Approva richiesta (l’host accetta)
     @Transactional
     public void approveRequest(Long eventId, User user) {
         Event event = getEventOrThrow(eventId);
@@ -124,7 +124,7 @@ public class EventService {
         }
     }
 
-    // 🔹 Rifiuta richiesta (l’host rimuove)
+    //Rifiuta richiesta (l’host rimuove)
     @Transactional
     public void rejectRequest(Long eventId, User user) {
         Event event = getEventOrThrow(eventId);
@@ -134,7 +134,7 @@ public class EventService {
         }
     }
 
-    // 🔹 Helper privati
+    //Helper privati
     private Event getEventOrThrow(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("Evento non trovato con ID: " + eventId));

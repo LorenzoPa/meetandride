@@ -46,7 +46,7 @@ public class User {
         this.password = password;
     }
 
-    // 🔹 Getter e Setter
+    //Getter e Setter
     public Long getId() { return id; }
 
     public String getUsername() { return username; }

@@ -71,7 +71,7 @@ public class Event {
         this.user = user;
     }
 
-    // 🔹 Getter e Setter
+    //Getter e Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -102,7 +102,7 @@ public class Event {
     public List<User> getRichieste() { return richieste; }
     public void setRichieste(List<User> richieste) { this.richieste = richieste; }
 
-    // 🔹 Helper methods
+    //Helper methods
     public boolean hasRequested(User user) {
         return richieste != null && richieste.stream().anyMatch(u -> u.getId().equals(user.getId()));
     }

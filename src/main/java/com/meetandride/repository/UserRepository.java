@@ -10,13 +10,13 @@ import com.meetandride.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // 🔹 Ricerca utente per username
+    //Ricerca utente per username
     Optional<User> findByUsername(String username);
 
-    // 🔹 Variante case-insensitive (opzionale, utile per login o inviti)
+    //Variante case-insensitive opzionale
     Optional<User> findByUsernameIgnoreCase(String username);
 
-    // 🔹 Controlli esistenza (registrazione)
+    //Controlli esistenza nella registazione
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 }
