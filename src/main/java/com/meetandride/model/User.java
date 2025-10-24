@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,18 +29,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(nullable = false)
+    private String ruolo = "USER"; // 🔹 valore di default
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vehicle> veicoli;
 
-    @Column(nullable = false)
-    private String ruolo = "USER"; // valore di default
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Event> eventiCreati;
 
-    public User() {
-
-    }
+    public User() {}
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -47,60 +46,33 @@ public class User {
         this.password = password;
     }
 
-    public Long getId() {
-        return id;
-    }
+    // 🔹 Getter e Setter
+    public Long getId() { return id; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getRuolo() { return ruolo; }
+    public void setRuolo(String ruolo) { this.ruolo = ruolo; }
 
-    public String getPassword() {
-        return password;
-    }
+    public List<Vehicle> getVeicoli() { return veicoli; }
+    public void setVeicoli(List<Vehicle> veicoli) { this.veicoli = veicoli; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<Event> getEventiCreati() {
-        return eventiCreati;
-    }
-
-    public void setEventiCreati(List<Event> eventiCreati) {
-        this.eventiCreati = eventiCreati;
-    }
+    public List<Event> getEventiCreati() { return eventiCreati; }
+    public void setEventiCreati(List<Event> eventiCreati) { this.eventiCreati = eventiCreati; }
 
     @Override
     public String toString() {
-        return username;
-    }
-
-    public String getRuolo() {
-        return ruolo;
-    }
-
-    public void setRuolo(String ruolo) {
-        this.ruolo = ruolo;
-    }
-
-    public List<Vehicle> getVeicoli() {
-        return veicoli;
-    }
-
-    public void setVeicoli(List<Vehicle> veicoli) {
-        this.veicoli = veicoli;
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

@@ -25,6 +25,13 @@ public class UserService {
 
     // 🔹 Registra un nuovo utente
     public User registerUser(String username, String email, String rawPassword) {
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("Username già in uso.");
+        }
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email già registrata.");
+        }
+
         String encodedPassword = passwordEncoder.encode(rawPassword);
         User user = new User(username, email, encodedPassword);
         return userRepository.save(user);
@@ -40,15 +47,17 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    // 🔹 Controlla se esiste già un utente con quello username
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
     // 🔹 Recupera l'utente attualmente loggato
     public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getName() == null || auth.getName().equals("anonymousUser")) {
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getName())) {
             return null;
         }
         return userRepository.findByUsername(auth.getName()).orElse(null);
     }
-    public boolean existsByUsername(String username) {
-    return userRepository.findByUsername(username).isPresent();
-}
 }

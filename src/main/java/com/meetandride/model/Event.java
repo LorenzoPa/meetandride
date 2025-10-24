@@ -1,10 +1,14 @@
 package com.meetandride.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,29 +31,37 @@ public class Event {
     @Column(length = 1000)
     private String descrizione;
 
-    private String visibilita;
+    @Enumerated(EnumType.STRING)
+    private Visibilita visibilita;
+
     private String localita;
     private LocalDate data;
     private String orario;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "partecipazioni",
             joinColumns = @JoinColumn(name = "evento_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<User> partecipanti;
+    private List<User> partecipanti = new ArrayList<>();
 
-    public Event() {
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "richieste_eventi",
+            joinColumns = @JoinColumn(name = "evento_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> richieste = new ArrayList<>();
 
-    }
+    public Event() {}
 
-    public Event(String titolo, String descrizione, String visibilita,
-            String localita, LocalDate data, String orario, User user) {
+    public Event(String titolo, String descrizione, Visibilita visibilita,
+                 String localita, LocalDate data, String orario, User user) {
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.visibilita = visibilita;
@@ -59,75 +71,71 @@ public class Event {
         this.user = user;
     }
 
-    public Long getId() {
-        return id;
+    // 🔹 Getter e Setter
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getTitolo() { return titolo; }
+    public void setTitolo(String titolo) { this.titolo = titolo; }
+
+    public String getDescrizione() { return descrizione; }
+    public void setDescrizione(String descrizione) { this.descrizione = descrizione; }
+
+    public Visibilita getVisibilita() { return visibilita; }
+    public void setVisibilita(Visibilita visibilita) { this.visibilita = visibilita; }
+
+    public String getLocalita() { return localita; }
+    public void setLocalita(String localita) { this.localita = localita; }
+
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
+
+    public String getOrario() { return orario; }
+    public void setOrario(String orario) { this.orario = orario; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public List<User> getPartecipanti() { return partecipanti; }
+    public void setPartecipanti(List<User> partecipanti) { this.partecipanti = partecipanti; }
+
+    public List<User> getRichieste() { return richieste; }
+    public void setRichieste(List<User> richieste) { this.richieste = richieste; }
+
+    // 🔹 Helper methods
+    public boolean hasRequested(User user) {
+        return richieste != null && richieste.stream().anyMatch(u -> u.getId().equals(user.getId()));
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public boolean isParticipating(User user) {
+        return partecipanti != null && partecipanti.stream().anyMatch(u -> u.getId().equals(user.getId()));
     }
 
-    public String getTitolo() {
-        return titolo;
+    public void addRequest(User user) {
+        if (!hasRequested(user)) {
+            richieste.add(user);
+        }
     }
 
-    public void setTitolo(String titolo) {
-        this.titolo = titolo;
+    public void removeRequest(User user) {
+        if (richieste != null) {
+            richieste.removeIf(u -> u.getId().equals(user.getId()));
+        }
     }
 
-    public String getDescrizione() {
-        return descrizione;
+    public void approveRequest(User user) {
+        removeRequest(user);
+        if (!isParticipating(user)) {
+            partecipanti.add(user);
+        }
     }
 
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
+    @Override
+    public String toString() {
+        return "Evento: " + titolo + " (" + localita + " - " + data + ")";
     }
 
-    public String getVisibilita() {
-        return visibilita;
-    }
-
-    public void setVisibilita(String visibilita) {
-        this.visibilita = visibilita;
-    }
-
-    public String getLocalita() {
-        return localita;
-    }
-
-    public void setLocalita(String localita) {
-        this.localita = localita;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-    public String getOrario() {
-        return orario;
-    }
-
-    public void setOrario(String orario) {
-        this.orario = orario;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<User> getPartecipanti() {
-        return partecipanti;
-    }
-
-    public void setPartecipanti(List<User> partecipanti) {
-        this.partecipanti = partecipanti;
+    public enum Visibilita {
+        APERTO, CHIUSO, PRIVATO
     }
 }

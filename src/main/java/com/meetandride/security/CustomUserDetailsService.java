@@ -19,14 +19,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        // 🔹 Cerca l'utente ignorando il case dello username
+        User user = userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Utente non trovato: " + username));
 
-        // 👇 Qui usiamo il builder di Spring Security con il nome completo del pacchetto
+        // 🔹 Costruisce un oggetto UserDetails riconosciuto da Spring Security
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRuolo())
+                .roles(user.getRuolo()) // es. USER o ADMIN
                 .build();
     }
 }

@@ -1,86 +1,116 @@
-# Meetandride README
+# 🏎️ Meet&Ride — Versione Alpha
 
-- [ ] TODO Replace or update this README with instructions relevant to your application
+**Meet&Ride** è un’applicazione web sviluppata con **Spring Boot + Vaadin**, pensata per creare, gestire e partecipare a **eventi automobilistici**.  
+Permette agli utenti di registrarsi, creare eventi pubblici o privati, iscriversi ai raduni, e gestire il proprio veicolo personale.
 
-## Project Structure
+---
 
-The sources of your Meetandride have the following structure:
+## 🚀 Funzionalità incluse nella versione Alpha
 
-```
-src
-├── main/frontend
-│   └── themes
-│       └── default
-│           ├── styles.css
-│           └── theme.json
-├── main/java
-│   └── [application package]
-│       ├── base
-│       │   └── ui
-│       │       ├── component
-│       │       │   └── ViewToolbar.java
-│       │       ├── MainErrorHandler.java
-│       │       └── MainLayout.java
-│       ├── examplefeature
-│       │   ├── ui
-│       │   │   └── TaskListView.java
-│       │   ├── Task.java
-│       │   ├── TaskRepository.java
-│       │   └── TaskService.java                
-│       └── Application.java       
-└── test/java
-    └── [application package]
-        └── examplefeature
-           └── TaskServiceTest.java                 
-```
+- ✅ **Registrazione / Login** (Username, Email, Password)
+- ✅ **Creazione evento** con Titolo, Descrizione, Visibilità (Aperto / Chiuso / Privato), Località, Data e Orario  
+- ✅ **Modifica evento** da parte dell’host
+- ✅ **Gestione richieste di partecipazione** (per eventi chiusi)
+- ✅ **Invito utente tramite username**
+- ✅ **Iscrizione / ritiro da evento**
+- ✅ **Visualizzazione eventi e dettagli completi**
+- ✅ **Ricerca eventi** per titolo, località, data o host
+- ✅ **Cronologia eventi (creati e partecipati)**
+- ✅ **Registrazione veicolo** (1 per utente)
 
-The main entry point into the application is `Application.java`. This class contains the `main()` method that start up 
-the Spring Boot application.
+---
 
-The skeleton follows a *feature-based package structure*, organizing code by *functional units* rather than traditional 
-architectural layers. It includes two feature packages: `base` and `examplefeature`.
+## 🧩 Stack Tecnologico
 
-* The `base` package contains classes meant for reuse across different features, either through composition or 
-  inheritance. You can use them as-is, tweak them to your needs, or remove them.
-* The `examplefeature` package is an example feature package that demonstrates the structure. It represents a 
-  *self-contained unit of functionality*, including UI components, business logic, data access, and an integration test.
-  Once you create your own features, *you'll remove this package*.
+| Componente | Tecnologia |
+|-------------|-------------|
+| **Backend** | Spring Boot 3, Spring Security, JPA/Hibernate |
+| **Frontend** | Vaadin Flow 24 |
+| **Database** | H2 / PostgreSQL |
+| **Build Tool** | Maven |
+| **Linguaggio** | Java 17+ |
 
-The `src/main/frontend` directory contains an empty theme called `default`, based on the Lumo theme. It is activated in
-the `Application` class, using the `@Theme` annotation.
+---
 
-## Starting in Development Mode
+## ⚙️ Requisiti minimi
 
-To start the application in development mode, import it into your IDE and run the `Application` class. 
-You can also start the application from the command line by running: 
+- ☕ **Java 17** o superiore  
+- 🧰 **Maven 3.8+**  
+- (Facoltativo) Database PostgreSQL o H2  
+- 🌐 Browser moderno (Chrome, Edge, Firefox)
+
+---
+
+## 📂 Struttura del progetto
+## 🧠 Architettura
 
 ```bash
-./mvnw
+src/
+ ├── main/java/com/meetandride/
+ │    ├── model/          → Entità JPA (User, Event, Vehicle)
+ │    ├── repository/     → Repository JPA per accesso ai dati
+ │    ├── service/        → Logica applicativa e gestione business
+ │    ├── security/       → Configurazione autenticazione e ruoli
+ │    ├── layout/         → Layout principale Vaadin (MainLayout)
+ │    └── view/           → Interfaccia utente Vaadin (Home, Eventi, Login, ecc.)
+ └── resources/
+      ├── application.properties  → Configurazione database e porte
+      └── static/ e templates/    → (eventuali risorse front-end)
 ```
+## 🧾 Credenziali di test (esempio)
 
-## Building for Production
-
-To build the application in production mode, run:
+Per testare rapidamente l’applicazione in locale puoi utilizzare:
 
 ```bash
-./mvnw -Pproduction package
+Username: admin
+Password: admin
 ```
+Puoi anche creare nuovi utenti direttamente dalla pagina Registrazione (/register).
 
-To build a Docker image, run:
+## 🛠️ Istruzioni per l’esecuzione
 
+### ▶️ Da IDE (IntelliJ, Eclipse, VS Code)
+
+1. Clona il progetto:
 ```bash
-docker build -t my-application:latest .
+   git clone https://github.com/<tuo-username>/meetandride.git
 ```
+Apri il progetto nel tuo IDE preferito.
 
-If you use commercial components, pass the license key as a build secret:
-
+Esegui la classe principale:
 ```bash
-docker build --secret id=proKey,src=$HOME/.vaadin/proKey .
+com.meetandride.MeetAndRideApplication
 ```
+Apri nel browser:
+http://localhost:8080
+▶️ Da terminale (Maven)
+```bash
+mvn spring-boot:run
+```
+L’applicazione sarà disponibile su http://localhost:8080
 
-## Getting Started
+## 🗺️ Roadmap — Prossime versioni
 
-The [Getting Started](https://vaadin.com/docs/latest/getting-started) guide will quickly familiarize you with your new
-Meetandride implementation. You'll learn how to set up your development environment, understand the project 
-structure, and find resources to help you add muscles to your skeleton — transforming it into a fully-featured 
-application.
+### 🔹 Versione Beta (in sviluppo)
+- [ ] Sistema di **notifiche** per richieste e inviti  
+- [ ] **Mappa interattiva** con Google Maps (posizione eventi)  
+- [ ] **Commenti / Chat evento** per i partecipanti  
+- [ ] **Distinzione eventi futuri e passati**  
+- [ ] Miglioramento interfaccia utente con **Vaadin responsive layout**  
+- [ ] **Profilo utente** con statistiche e storico eventi  
+- [ ] Gestione **ruoli avanzati (USER / ADMIN)**  
+
+### 🔸 Versione 1.0 (release stabile)
+- [ ] Dashboard personale con riepilogo eventi e notifiche  
+- [ ] Sistema di reputazione o badge per utenti attivi  
+- [ ] Integrazione con social (condivisione eventi)  
+- [ ] Deploy su server cloud (Render / Railway / AWS)  
+
+## 👨‍💻 Autore
+
+**Lorenzo Paniccia**  
+📍 Italia — 2025  
+
+---
+
+

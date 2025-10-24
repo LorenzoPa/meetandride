@@ -13,33 +13,46 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                // 🔓 Rotte pubbliche (accesso libero)
-                .requestMatchers("/", "/login", "/register",
-                        "/images/**", "/styles/**", "/VAADIN/**",
-                        "/frontend/**", "/webjars/**", "/icons/**", "/manifest.webmanifest"
+            // 🔒 Disattiva CSRF solo se non hai form HTML diretti (Vaadin lo gestisce da sé)
+            .csrf(csrf -> csrf.disable())
+
+            .authorizeHttpRequests(auth -> auth
+                // 🔓 Rotte pubbliche (registrazione, login, risorse statiche)
+                .requestMatchers(
+                    "/", "/login", "/register",
+                    "/images/**", "/styles/**", "/VAADIN/**",
+                    "/frontend/**", "/webjars/**", "/icons/**",
+                    "/manifest.webmanifest", "/sw.js", "/offline.html"
                 ).permitAll()
-                // 🔒 Rotte riservate agli Admin
+
+                // 🔒 Area admin
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                // 🔒 Tutto il resto richiede login
+
+                // 🔒 Tutto il resto richiede autenticazione
                 .anyRequest().authenticated()
-                )
-                .formLogin(login -> login
-                .loginPage("/login")
-                .defaultSuccessUrl("/", true) // 👈 reindirizza alla home dopo login
+            )
+
+            // 🔐 Configurazione form login
+            .formLogin(login -> login
+                .loginPage("/login")                  // pagina custom Vaadin
+                .defaultSuccessUrl("/", true)         // redirect dopo login
+                .failureUrl("/login?error")           // redirect se login fallisce
                 .permitAll()
-                )
-                .logout(logout -> logout
+            )
+
+            // 🔓 Configurazione logout
+            .logout(logout -> logout
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
-                );
+            );
 
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // BCrypt rimane la scelta migliore per password hashing
         return new BCryptPasswordEncoder();
     }
 }
