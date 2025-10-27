@@ -111,6 +111,9 @@ public class Event {
         return partecipanti != null && partecipanti.stream().anyMatch(u -> u.getId().equals(user.getId()));
     }
 
+    public boolean isHost(User user){
+        return this.user.getId().equals(user.getId());
+    }
     public void addRequest(User user) {
         if (!hasRequested(user)) {
             richieste.add(user);

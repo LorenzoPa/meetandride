@@ -116,7 +116,10 @@ public class EventDetailView extends VerticalLayout implements HasUrlParameter<L
                     Notification.show(username + " ha già inviato una richiesta.", 2500, Position.TOP_CENTER);
                     return;
                 }
-
+                if (evento.isHost(invited)){
+                    Notification.show("Non puoi invitare l'host!", 2500, Position.TOP_CENTER);
+                    return;
+                }
                 eventService.addParticipant(evento.getId(), invited);
                 Notification.show("Utente \"" + username + "\" invitato con successo!", 2500, Position.TOP_CENTER);
                 usernameField.clear();
